@@ -3,6 +3,8 @@ package com.raoqiang.model.pmml.controllers;
 import com.raoqiang.model.pmml.entry.Request;
 import com.raoqiang.model.pmml.entry.Response;
 import com.raoqiang.model.pmml.services.impl.PMMLEvaluatorImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,16 +21,20 @@ import java.util.List;
 @RequestMapping(value = "/pmml")
 public class PMMLControllers {
 
+    private static final Log LOG = LogFactory.getLog(PMMLControllers.class);
+
     @Autowired
     private PMMLEvaluatorImpl evaluator;
 
     @RequestMapping(value = "/evaluator", method = RequestMethod.POST)
     @ResponseBody
     public Response hbaseOperate(@RequestBody Request pmmlRequest) {
-        System.out.println(pmmlRequest);
+//        System.out.println(pmmlRequest);
         Response response=null;
         try {
+            LOG.info("发起模型预测 -> ");
             double result = evaluator.evaluate(pmmlRequest.getParams());
+            LOG.info("预测结果 -> " + result);
             HashMap hashMap = new HashMap();
             hashMap.put("1", result);
             List list = new ArrayList();
